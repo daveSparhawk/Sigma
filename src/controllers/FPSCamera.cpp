@@ -1,5 +1,6 @@
 #include "controllers/FPSCamera.h"
 #include "components/PhysicsController.h"
+#include "components/Interactable.h"
 
 namespace Sigma{
 	namespace event{
@@ -66,6 +67,8 @@ namespace Sigma{
 					this->mouseLook = !this->mouseLook;
 					os->ToggleMouseLock();
 				}
+
+                Sigma::Interactable::playerActionTest(btn);
 			}
 
 			//Does nothing, but has to be here because of IMouseEventHandler

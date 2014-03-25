@@ -13,6 +13,7 @@
 #include "systems/WebGUISystem.h"
 #include "OS.h"
 #include "components/SpotLight.h"
+#include "components/Interactable.h"
 
 #ifdef _WIN32
 #include <windows.h>
@@ -44,12 +45,14 @@ int main(int argCount, char **argValues) {
 	Sigma::OpenGLSystem glsys;
 	Sigma::OpenALSystem alsys;
 	Sigma::BulletPhysics bphys;
+    Sigma::Interactable myiact;
 
 	Sigma::FactorySystem& factory = Sigma::FactorySystem::getInstance();
 
 	// EntitySystem can add components
 	Sigma::EntitySystem entitySystem(&factory);
 
+    factory.register_Factory(myiact);
 	factory.register_Factory(glsys);
 	factory.register_Factory(alsys);
 	factory.register_Factory(bphys);
