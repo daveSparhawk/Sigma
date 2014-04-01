@@ -3,6 +3,8 @@
 #include "resources/Mesh.h"
 #include "components/BulletShapeSphere.h"
 #include "composites/PhysicalWorldLocation.h"
+#include "components/InteractableButton.h"
+#include "composites/Interactable.h"
 
 namespace Sigma {
 	// We need ctor and dstor to be exported to a dll even if they don't do anything
@@ -59,6 +61,7 @@ namespace Sigma {
 		std::map<std::string,Sigma::IFactory::FactoryFunction> retval;
 		retval["BulletShapeMesh"] = std::bind(&BulletPhysics::createBulletShapeMesh,this,_1,_2);
 		retval["BulletShapeSphere"] = std::bind(&BulletPhysics::createBulletShapeSphere,this,_1,_2);
+        retval["InteractableButton"] = std::bind(&BulletPhysics::createInteractableButton, this, _1, _2);
 		return retval;
 	}
 
@@ -174,6 +177,25 @@ namespace Sigma {
 		return sphere;
 	}
 
+    IComponent* BulletPhysics::createInteractableButton(const id_t entityID, const std::vector<Property> &properties)
+    {
+        InteractableButton* retvalue = new InteractableButton();
+        float radius = 1;
+        int validstate = 0;
+        int defaultstate = -1;
+        std::map<int, statedetail> StateList;
+        for (auto propitr = properties.begin(); propitr != properties.end(); ++propitr) {
+            const Property*  p = &(*propitr);
+            if (p->GetName() == "radius") { radius = p->Get<float>(); }
+            else if (p->GetName() == "state") { validstate = p->Get<int>(); }
+            else if (p->GetName() == "defaultstate") { defaultstate = p->Get<int>(); }
+            else if (p->GetName() == "setstate") { StateList[validstate].nextstate = p->Get<int>(); }
+        }
+        retvalue->simplecreate(entityID, radius, defaultstate, StateList);
+        Interactable::AddEntity(entityID, retvalue);
+        return retvalue;
+    }
+
 	bool BulletPhysics::Update(const double delta) {
 		this->mover->UpdateForces(delta);
 		// Make entities with target move a little
@@ -188,7 +210,7 @@ namespace Sigma {
 		PhysicalWorldLocation::UpdateTransform();
 		PhysicalWorldLocation::ClearUpdatedSet();
 		this->mover->UpdateTransform();
-
+        Interactable::playerActionUpdate();
 		return true;
 	}
 }

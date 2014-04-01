@@ -44,6 +44,8 @@ namespace Sigma {
 		std::unique_ptr<IECSComponent> addPhysicalWorldLocation(const id_t entityID, const std::vector<Property> &properties);
 		std::unique_ptr<IECSComponent> addRigidBody(const id_t entityID, const std::vector<Property> &properties);
 
+        DLL_EXPORT IComponent* createInteractableButton(const id_t entityID, const std::vector<Property> &properties);
+
 		DLL_EXPORT void initViewMover(GLTransform& t);
 		PhysicsController* getViewMover() {
 			return this->mover;

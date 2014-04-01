@@ -1,6 +1,6 @@
 #include "controllers/FPSCamera.h"
 #include "components/PhysicsController.h"
-#include "components/Interactable.h"
+#include "composites/Interactable.h"
 
 namespace Sigma{
 	namespace event{
